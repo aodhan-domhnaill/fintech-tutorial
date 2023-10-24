@@ -9,13 +9,12 @@ import service
 
 @pytest.fixture
 def service_stub():
-    if os.getenv("TEST_TYPE") == "unit":
-        return None # service.Pricing()
-    else:
+    host = os.getenv("GRPC_HOST") or "localhost"
+    if host == "localhost":
         service.run()
-        return backend_pb2_grpc.PricingStub(
-            grpc.insecure_channel('localhost:50051')
-        )
+    return backend_pb2_grpc.PricingStub(
+        grpc.insecure_channel(f'{host}:50051')
+    )
 
 def now():
     t = Timestamp()

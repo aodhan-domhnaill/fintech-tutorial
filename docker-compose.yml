@@ -41,3 +41,6 @@ services:
     environment:
       BACKEND_GRPC_HOST: backend
 
+
+  compute:
+    build: ./compute/

@@ -10,6 +10,7 @@ from google.protobuf.empty_pb2 import Empty
 
 import service
 
+
 @pytest.fixture
 def service_stub():
     host = os.getenv("GRPC_HOST") or "localhost"
@@ -19,10 +20,12 @@ def service_stub():
         grpc.insecure_channel(f'{host}:50051')
     )
 
+
 def now():
     t = Timestamp()
     t.GetCurrentTime()
     return t
+
 
 def test_SavePrice(service_stub):
     service_stub.SavePrice(
@@ -32,6 +35,7 @@ def test_SavePrice(service_stub):
             timestamp=now()
         ),
     )
+
 
 def test_GetLatestPrice(service_stub):
     price = service_stub.GetLatestPrice(Empty())

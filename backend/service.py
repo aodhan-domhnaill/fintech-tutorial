@@ -6,6 +6,7 @@ import backend_pb2_grpc
 import backend_pb2
 from google.protobuf.timestamp_pb2 import Timestamp
 
+
 class Pricing(backend_pb2_grpc.PricingServicer):
     def now(self):
         t = Timestamp()
@@ -15,13 +16,14 @@ class Pricing(backend_pb2_grpc.PricingServicer):
     def SavePrice(self, request, context):
         print(request, context)
         return request
-    
+
     def GetLatestPrice(self, request, context):
         return backend_pb2.Stock(
             symbol="AAPL",
             price=123.0,
             timestamp=self.now()
         )
+
 
 def run():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
@@ -30,9 +32,11 @@ def run():
     server.add_insecure_port('[::]:50051')
     server.start()
     print("Pricing server started")
+    return server
+
 
 if __name__ == "__main__":
-    run()
+    server = run()
 
     try:
         while True:

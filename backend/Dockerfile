@@ -1,6 +1,6 @@
 FROM python:3
 
-RUN pip install pytest
+RUN pip install pytest flake8
 
 WORKDIR /code/
 
@@ -9,4 +9,5 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-RUN pwd && ls && pytest .
+RUN flake8 *service.py\
+    && pytest .

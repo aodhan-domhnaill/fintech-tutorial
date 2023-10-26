@@ -12,8 +12,8 @@ import service
 
 
 @pytest.fixture
-def service_stub():
-    host = os.getenv("GRPC_HOST") or "localhost"
+def backend_stub():
+    host = os.getenv("BACKEND_GRPC_HOST") or "localhost"
     if host == "localhost":
         service.run()
     return backend_pb2_grpc.PricingStub(
@@ -27,8 +27,8 @@ def now():
     return t
 
 
-def test_SavePrice(service_stub):
-    service_stub.SavePrice(
+def test_SavePrice(backend_stub):
+    backend_stub.SavePrice(
         backend_pb2.Stock(
             symbol="AAPL",
             price=123.0,
@@ -37,6 +37,6 @@ def test_SavePrice(service_stub):
     )
 
 
-def test_GetLatestPrice(service_stub):
-    price = service_stub.GetLatestPrice(Empty())
+def test_GetLatestPrice(backend_stub):
+    price = backend_stub.GetLatestPrice(Empty())
     assert price.symbol == "AAPL"

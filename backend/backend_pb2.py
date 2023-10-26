@@ -12,17 +12,18 @@ _sym_db = _symbol_database.Default()
 
 
 from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
+from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rbackend.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"U\n\x05Stock\x12\x0e\n\x06symbol\x18\x01 \x01(\t\x12\r\n\x05price\x18\x02 \x01(\x02\x12-\n\ttimestamp\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp2&\n\x07Pricing\x12\x1b\n\tSavePrice\x12\x06.Stock\x1a\x06.Stockb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rbackend.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\"U\n\x05Stock\x12\x0e\n\x06symbol\x18\x01 \x01(\t\x12\r\n\x05price\x18\x02 \x01(\x02\x12-\n\ttimestamp\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp2X\n\x07Pricing\x12\x1b\n\tSavePrice\x12\x06.Stock\x1a\x06.Stock\x12\x30\n\x0eGetLatestPrice\x12\x16.google.protobuf.Empty\x1a\x06.Stockb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'backend_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._options = None
-  _globals['_STOCK']._serialized_start=50
-  _globals['_STOCK']._serialized_end=135
-  _globals['_PRICING']._serialized_start=137
-  _globals['_PRICING']._serialized_end=175
+  _globals['_STOCK']._serialized_start=79
+  _globals['_STOCK']._serialized_end=164
+  _globals['_PRICING']._serialized_start=166
+  _globals['_PRICING']._serialized_end=254
 # @@protoc_insertion_point(module_scope)

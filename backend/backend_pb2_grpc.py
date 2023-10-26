@@ -3,6 +3,7 @@
 import grpc
 
 import backend_pb2 as backend__pb2
+from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
 class PricingStub(object):
@@ -19,6 +20,11 @@ class PricingStub(object):
                 request_serializer=backend__pb2.Stock.SerializeToString,
                 response_deserializer=backend__pb2.Stock.FromString,
                 )
+        self.GetLatestPrice = channel.unary_unary(
+                '/Pricing/GetLatestPrice',
+                request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+                response_deserializer=backend__pb2.Stock.FromString,
+                )
 
 
 class PricingServicer(object):
@@ -30,12 +36,23 @@ class PricingServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetLatestPrice(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_PricingServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'SavePrice': grpc.unary_unary_rpc_method_handler(
                     servicer.SavePrice,
                     request_deserializer=backend__pb2.Stock.FromString,
+                    response_serializer=backend__pb2.Stock.SerializeToString,
+            ),
+            'GetLatestPrice': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetLatestPrice,
+                    request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                     response_serializer=backend__pb2.Stock.SerializeToString,
             ),
     }
@@ -61,6 +78,23 @@ class Pricing(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Pricing/SavePrice',
             backend__pb2.Stock.SerializeToString,
+            backend__pb2.Stock.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetLatestPrice(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/Pricing/GetLatestPrice',
+            google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             backend__pb2.Stock.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

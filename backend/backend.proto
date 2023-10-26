@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
 
 message Stock {
     string symbol = 1;
@@ -10,4 +11,5 @@ message Stock {
 
 service Pricing {
     rpc SavePrice(Stock) returns (Stock);
+    rpc GetLatestPrice(google.protobuf.Empty) returns (Stock);
 }

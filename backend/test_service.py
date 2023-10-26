@@ -4,7 +4,10 @@ import grpc
 
 import backend_pb2
 import backend_pb2_grpc
+
 from google.protobuf.timestamp_pb2 import Timestamp
+from google.protobuf.empty_pb2 import Empty
+
 import service
 
 @pytest.fixture
@@ -22,7 +25,6 @@ def now():
     return t
 
 def test_SavePrice(service_stub):
-    
     service_stub.SavePrice(
         backend_pb2.Stock(
             symbol="AAPL",
@@ -30,3 +32,7 @@ def test_SavePrice(service_stub):
             timestamp=now()
         ),
     )
+
+def test_GetLatestPrice(service_stub):
+    price = service_stub.GetLatestPrice(Empty())
+    assert price.symbol == "AAPL"

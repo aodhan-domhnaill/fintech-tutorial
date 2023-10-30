@@ -11,3 +11,5 @@ COPY . .
 
 RUN flake8 *service.py\
     && pytest .
+
+ENTRYPOINT [ "python", "/code/service.py" ]

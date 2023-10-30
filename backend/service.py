@@ -22,8 +22,8 @@ class Pricing(backend_pb2_grpc.PricingServicer):
         with self.conn.cursor() as curs:
             curs.execute(
                 "INSERT INTO stock (_time, price, symbol)"
-                "VALUES (?, ?, ?)",
-                (request.timestamp, request.price, request.symbol)
+                " VALUES (%s, %s, %s)",
+                (request.timestamp.ToDatetime(), request.price, request.symbol)
             )
 
         self.conn.commit()
@@ -52,10 +52,15 @@ def run(dbconn):
 
 
 if __name__ == "__main__":
-    server = run(psycopg2.connect(os.getenv("POSTGRES_URI")))
+    print("Starting backend server")
+    uri = os.getenv("POSTGRES_URI")
+    print(f"Trying to connect to '{uri}'")
+    conn = psycopg2.connect(uri)
+    server = run(conn)
 
     try:
         while True:
             time.sleep(86400)
     except KeyboardInterrupt:
         server.stop(0)
+        conn.close()

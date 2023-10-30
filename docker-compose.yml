@@ -15,15 +15,29 @@ services:
 
   migrate:
     image: migrate/migrate:v4.16.2
+    restart: on-failure
+    networks:
+      - default
+    environment:
+      POSTGRES_URI: 
+    volumes:
+      - ./migrate/:/migrations:Z
+    command: -database postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?sslmode=disable -path /migrations/ up
+
+  backend:
+    build: ./backend/
+    restart: always
     networks:
       - default
     environment:
       POSTGRES_URI: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?sslmode=disable
-    volumes:
-      - ./migrate/:/migrations:Z
-    command: -database $POSTGRES_URI -path /migrations/ up
+    entrypoint: [ "python", "/code/service.py" ]
 
-  backend:
+  test_backend:
     build: ./backend/
+    networks:
+      - default
+    entrypoint: [ "pytest", "/code/" ]
     environment:
-      POSTGRES_URI: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?sslmode=disable
+      BACKEND_GRPC_HOST: backend
+

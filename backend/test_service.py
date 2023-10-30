@@ -1,12 +1,15 @@
 import pytest
 import os
 import grpc
+import datetime
 
 import backend_pb2
 import backend_pb2_grpc
 
 from google.protobuf.timestamp_pb2 import Timestamp
 from google.protobuf.empty_pb2 import Empty
+
+from unittest.mock import MagicMock
 
 import service
 
@@ -15,7 +18,11 @@ import service
 def backend_stub():
     host = os.getenv("BACKEND_GRPC_HOST") or "localhost"
     if host == "localhost":
-        service.run()
+        pgmock = MagicMock()
+        curmock = pgmock.cursor.return_value.__enter__.return_value
+        curmock.fetchone.return_value = (
+            datetime.datetime.now(), 200.2, "AAPL")
+        service.run(dbconn=pgmock)
     return backend_pb2_grpc.PricingStub(
         grpc.insecure_channel(f'{host}:50051')
     )

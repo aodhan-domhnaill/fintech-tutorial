@@ -17,9 +17,13 @@ services:
     image: migrate/migrate:v4.16.2
     networks:
       - default
+    environment:
+      POSTGRES_URI: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?sslmode=disable
     volumes:
       - ./migrate/:/migrations:Z
-    command: -database postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?sslmode=disable -path /migrations/ up
+    command: -database $POSTGRES_URI -path /migrations/ up
 
   backend:
     build: ./backend/
+    environment:
+      POSTGRES_URI: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?sslmode=disable

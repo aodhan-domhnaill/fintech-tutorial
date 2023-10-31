@@ -71,3 +71,17 @@ services:
     environment:
       BACKEND_GRPC_HOST: backend
     entrypoint: [ "python", "/code/service.py" ]
+
+  scrapper:
+    build: ./scrapper/
+    networks:
+      - default
+    environment:
+      BACKEND_GRPC_HOST: backend
+
+  test_scrapper:
+    image: alpine/curl
+    networks:
+      - default
+    command: |
+      -XPOST "http://scrapper:8080/2015-03-31/functions/function/invocations" -d '{"first_name": "John", "last_name": "Heimer"}'

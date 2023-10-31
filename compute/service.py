@@ -1,5 +1,5 @@
 import grpc
-import math
+import random
 import os
 import time
 import backend_pb2_grpc
@@ -23,10 +23,12 @@ def backend_stub():
 
 def integrator(backend_stub):
     price = backend_stub.GetLatestPrice(Empty()).price
+    new_price = random.uniform(-100, 100) + price
+    print("New Price is random:", new_price, flush=True)
     backend_stub.SavePrice(
         backend_pb2.Stock(
-            symbol="AAPL",
-            price=50.0 * math.sin(price/100.0) + 100,
+            symbol="RAND",
+            price=new_price,
             timestamp=now()
         ),
     )

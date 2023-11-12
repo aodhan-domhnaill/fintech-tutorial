@@ -70,7 +70,7 @@ services:
       - default
     environment:
       BACKEND_GRPC_HOST: backend
-    entrypoint: [ "uvicorn", "service:app", "--reload" ]
+    entrypoint: [ "python", "/code/service.py" ]
 
 
   api:
@@ -85,7 +85,7 @@ services:
       - default
     environment:
       BACKEND_GRPC_HOST: backend
-    entrypoint: [ "python", "/code/service.py" ]
+    entrypoint: [ "uvicorn", "service:app", "--reload" ]
 
   scrapper:
     build: ./scrapper/

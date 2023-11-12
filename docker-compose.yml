@@ -70,6 +70,21 @@ services:
       - default
     environment:
       BACKEND_GRPC_HOST: backend
+    entrypoint: [ "uvicorn", "service:app", "--reload" ]
+
+
+  api:
+    build: ./api/
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+    networks:
+      - default
+    environment:
+      BACKEND_GRPC_HOST: backend
     entrypoint: [ "python", "/code/service.py" ]
 
   scrapper:

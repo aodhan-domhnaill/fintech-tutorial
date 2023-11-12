@@ -85,7 +85,7 @@ services:
       - default
     environment:
       BACKEND_GRPC_HOST: backend
-    entrypoint: [ "uvicorn", "service:app", "--reload" ]
+    entrypoint: [ "uvicorn", "--host", "api", "service:app", "--reload" ]
 
   scrapper:
     build: ./scrapper/

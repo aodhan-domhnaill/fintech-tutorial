@@ -24,7 +24,7 @@ def now():
 
 @app.post("/price/{price}")
 def add_price(price: float):
-    _add_price(price, backend_stub=backend_stub())
+    return _add_price(price, backend_stub=backend_stub())
 
 
 def _add_price(price, backend_stub):

@@ -2,7 +2,7 @@ import requests
 
 
 def handler(event, context):
-    data = requests.get(
+    requests.get(
         "https://api.coindesk.com/v1/bpi/currentprice.json").json()
 
-    return data["bpi"]
+    return requests.post("http://api:8000/price/123.0").json()

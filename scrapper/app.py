@@ -1,6 +1,8 @@
+import requests
+
+
 def handler(event, context):
-    print(event)
-    message = 'Hello'
-    return { 
-        'message' : message
-    }
+    data = requests.get(
+        "https://api.coindesk.com/v1/bpi/currentprice.json").json()
+
+    return data["bpi"]

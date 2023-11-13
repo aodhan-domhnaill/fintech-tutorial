@@ -9,7 +9,15 @@ message Stock {
     google.protobuf.Timestamp timestamp = 3;
 }
 
+
+message AvgPrice {
+    float price = 1;
+}
+
 service Pricing {
     rpc SavePrice(Stock) returns (Stock);
     rpc GetLatestPrice(google.protobuf.Empty) returns (Stock);
+    rpc GetMvgAvg(google.protobuf.Empty) returns (AvgPrice);
 }
+
+

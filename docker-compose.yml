@@ -85,6 +85,8 @@ services:
       - default
     environment:
       BACKEND_GRPC_HOST: backend
+    ports:
+      - 8000:8000
     entrypoint: [ "uvicorn", "--host", "api", "service:app", "--reload" ]
 
   scrapper:

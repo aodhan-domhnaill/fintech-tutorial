@@ -40,6 +40,15 @@ class Pricing(backend_pb2_grpc.PricingServicer):
             timestamp=self._grpc_time(t),
         )
 
+    def GetMvgAvg(self, request, context):
+        with self.conn.cursor() as curs:
+            curs.execute("SELECT price FROM mvg_avg LIMIT 1")
+            p = curs.fetchone()
+
+        return backend_pb2.AvgPrice(
+            price=p,
+        )
+
 
 def run(dbconn):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

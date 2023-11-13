@@ -2,6 +2,8 @@ import grpc
 import os
 import backend_pb2_grpc
 import backend_pb2
+
+from google.protobuf.empty_pb2 import Empty
 from google.protobuf.timestamp_pb2 import Timestamp
 
 from fastapi import FastAPI
@@ -35,4 +37,14 @@ def _add_price(price, backend_stub):
             timestamp=now()
         ),
     )
+    return {"price", price}
+
+
+@app.get("/mvg_avg/")
+def get_mvg_avg():
+    return _get_mvg_avg(backend_stub=backend_stub())
+
+
+def _get_mvg_avg(backend_stub):
+    price = backend_stub.GetMvgAvg(Empty()).price
     return {"price", price}

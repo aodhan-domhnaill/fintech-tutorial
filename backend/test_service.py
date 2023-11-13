@@ -2,6 +2,7 @@ import pytest
 import os
 import grpc
 import datetime
+import unittest
 
 import backend_pb2
 import backend_pb2_grpc
@@ -47,3 +48,9 @@ def test_SavePrice(backend_stub):
 def test_GetLatestPrice(backend_stub):
     price = backend_stub.GetLatestPrice(Empty())
     assert price.symbol == "AAPL"
+
+
+@unittest.skip("reason for skipping")
+def test_GetMvgPrice(backend_stub):
+    price = backend_stub.GetMvgAvg(Empty())
+    assert price.price == 123

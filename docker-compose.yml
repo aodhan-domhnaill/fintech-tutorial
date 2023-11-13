@@ -51,7 +51,7 @@ services:
       db:
         condition: service_healthy
       backend:
-        condition: service_healthy
+        condition: service_started
     networks:
       - default
     entrypoint: [ "pytest", "/code/" ]
@@ -65,7 +65,7 @@ services:
       db:
         condition: service_healthy
       backend:
-        condition: service_healthy
+        condition: service_started
     networks:
       - default
     environment:
@@ -80,7 +80,7 @@ services:
       db:
         condition: service_healthy
       backend:
-        condition: service_healthy
+        condition: service_started
     networks:
       - default
     environment:

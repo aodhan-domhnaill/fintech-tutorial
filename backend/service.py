@@ -32,7 +32,8 @@ class Pricing(backend_pb2_grpc.PricingServicer):
     def GetLatestPrice(self, request, context):
         with self.conn.cursor() as curs:
             curs.execute("SELECT _time, price, symbol FROM stock LIMIT 1")
-            (t, p, s) = curs.fetchone()
+            obj = curs.fetchone()
+            (t, p, s) = obj
 
         return backend_pb2.Stock(
             symbol=s,
@@ -46,7 +47,7 @@ class Pricing(backend_pb2_grpc.PricingServicer):
             p = curs.fetchone()
 
         return backend_pb2.AvgPrice(
-            price=p,
+            price=p[0],
         )
 
 

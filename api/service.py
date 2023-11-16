@@ -37,7 +37,7 @@ def _add_price(price, backend_stub):
             timestamp=now()
         ),
     )
-    return {"price", price}
+    return {"price": price}
 
 
 @app.get("/mvg_avg/")
@@ -47,4 +47,4 @@ def get_mvg_avg():
 
 def _get_mvg_avg(backend_stub):
     price = backend_stub.GetMvgAvg(Empty()).price
-    return {"price", price}
+    return {"price": price}

@@ -89,6 +89,19 @@ services:
       - 8000:8000
     entrypoint: [ "uvicorn", "--host", "api", "service:app", "--reload" ]
 
+  test_api:
+    build: ./api/
+    depends_on:
+      db:
+        condition: service_healthy
+      backend:
+        condition: service_started
+    networks:
+      - default
+    entrypoint: [ "pytest", "/code/" ]
+    environment:
+      BACKEND_GRPC_HOST: backend
+
   scrapper:
     build: ./scrapper/
     networks:
@@ -135,3 +148,51 @@ services:
       stepfunctions
         --endpoint-url http://stepfunctions:8083 start-execution
         --state-machine-arn "arn:aws:states:us-east-1:123456789012:stateMachine:scrapper"
+
+  scrapper_mvg_avg:
+    build: ./scrapper/
+    networks:
+      - default
+    environment:
+      BACKEND_GRPC_HOST: backend
+    command: ["app.avg_handler"]
+
+  mvg_avg_stepfunctions:
+    image: amazon/aws-stepfunctions-local
+    networks:
+      - default
+    environment:
+      LAMBDA_ENDPOINT: http://scrapper:8080
+
+  mvg_avg_scrapper_sfn_create:
+    image: amazon/aws-cli
+    restart: on-failure
+    networks:
+      - default
+    volumes:
+      - ./scrapper/sfn_mvg_avg.json:/code/sfn_mvg_avg.json
+    environment:
+      AWS_ACCESS_KEY_ID: fake
+      AWS_SECRET_ACCESS_KEY: fake
+      AWS_DEFAULT_REGION: local
+    command: |
+      stepfunctions
+        --endpoint-url http://mvg_avg_stepfunctions:8083
+        create-state-machine --definition file:///code/sfn_mvg_avg.json
+        --name "mvg_avg_scrapper"
+        --role-arn "arn:aws:iam::012345678901:role/DummyRole"
+
+  mvg_avg_scrapper_sfn_invoke:
+    image: amazon/aws-cli
+    restart: on-failure
+    networks:
+      - default
+    environment:
+      AWS_ACCESS_KEY_ID: fake
+      AWS_SECRET_ACCESS_KEY: fake
+      AWS_DEFAULT_REGION: local
+    command: |
+      stepfunctions
+        --endpoint-url http://mvg_avg_stepfunctions:8083 start-execution
+        --state-machine-arn "arn:aws:states:us-east-1:123456789012:stateMachine:mvg_avg_scrapper"
+

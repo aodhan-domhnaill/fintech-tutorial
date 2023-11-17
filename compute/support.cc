@@ -2,8 +2,7 @@
 
 int Function(int num) 
 {
-    std::cout << "Num = " << num << std::endl;
-    return 0;
+    return num * 5;
 }
 
 extern "C" {

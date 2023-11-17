@@ -9,7 +9,9 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
+RUN g++ -fPIC -shared -o libsupport.so support.cc
+RUN python support.py
+
 RUN flake8 *service.py\
     && pytest .
 
-RUN g++ -fPIC -shared -o support.so support.cc

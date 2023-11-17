@@ -4,12 +4,11 @@ import os
 
 # https://numpy.org/doc/stable/reference/generated/numpy.ndarray.ctypes.html
 # https://numpy.org/doc/stable/reference/routines.ctypeslib.html
-class Support:
-    def __init__(self):
-        dir_path = os.path.dirname(os.path.realpath(__file__))
-        self.handle = ctypes.CDLL(dir_path + "/support.so")     
 
-        self.handle.My_Function.argtypes = [ctypes.c_int] 
+dir_path = os.path.dirname(os.path.realpath(__file__))
+handle = ctypes.CDLL(dir_path + "/libsupport.so")     
 
-    def My_Function(self, num):
-        return self.handle.My_Function(num)
+handle.My_Function.argtypes = [ctypes.c_int] 
+
+def My_Function(num):
+    return handle.My_Function(num)

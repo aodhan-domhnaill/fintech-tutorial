@@ -109,12 +109,27 @@ services:
     environment:
       BACKEND_GRPC_HOST: backend
 
+  scrapper_mvg_avg:
+    build: ./scrapper/
+    networks:
+      - default
+    environment:
+      BACKEND_GRPC_HOST: backend
+    command: ["app.avg_handler"]
+
+  lambda:
+    image: nginx
+    ports:
+      - 8080:8080
+    volumes:
+      - ./lambda.nginx.conf:/etc/nginx/nginx.conf:ro
+
   stepfunctions:
     image: amazon/aws-stepfunctions-local
     networks:
       - default
     environment:
-      LAMBDA_ENDPOINT: http://scrapper:8080
+      LAMBDA_ENDPOINT: http://lambda:8080
 
 
   scrapper_sfn_create:
@@ -149,21 +164,6 @@ services:
         --endpoint-url http://stepfunctions:8083 start-execution
         --state-machine-arn "arn:aws:states:us-east-1:123456789012:stateMachine:scrapper"
 
-  scrapper_mvg_avg:
-    build: ./scrapper/
-    networks:
-      - default
-    environment:
-      BACKEND_GRPC_HOST: backend
-    command: ["app.avg_handler"]
-
-  mvg_avg_stepfunctions:
-    image: amazon/aws-stepfunctions-local
-    networks:
-      - default
-    environment:
-      LAMBDA_ENDPOINT: http://scrapper:8080
-
   mvg_avg_scrapper_sfn_create:
     image: amazon/aws-cli
     restart: on-failure
@@ -177,7 +177,7 @@ services:
       AWS_DEFAULT_REGION: local
     command: |
       stepfunctions
-        --endpoint-url http://mvg_avg_stepfunctions:8083
+        --endpoint-url http://stepfunctions:8083
         create-state-machine --definition file:///code/sfn_mvg_avg.json
         --name "mvg_avg_scrapper"
         --role-arn "arn:aws:iam::012345678901:role/DummyRole"
@@ -193,6 +193,6 @@ services:
       AWS_DEFAULT_REGION: local
     command: |
       stepfunctions
-        --endpoint-url http://mvg_avg_stepfunctions:8083 start-execution
+        --endpoint-url http://stepfunctions:8083 start-execution
         --state-machine-arn "arn:aws:states:us-east-1:123456789012:stateMachine:mvg_avg_scrapper"
 

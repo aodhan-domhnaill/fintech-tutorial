@@ -119,10 +119,12 @@ services:
 
   lambda:
     image: nginx
+    networks:
+      - default
     ports:
       - 8080:8080
     volumes:
-      - ./lambda.nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./lambda.nginx.conf:/etc/nginx/conf.d/lambda.nginx.conf:ro
 
   stepfunctions:
     image: amazon/aws-stepfunctions-local

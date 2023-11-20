@@ -1,14 +1,15 @@
-FROM ubuntu:23.04 as deps
+FROM alpine:3.18 as deps
 
-RUN apt-get update \
-    && apt-get install -y cmake build-essential autoconf libtool pkg-config git
-
-ARG MY_INSTALL_DIR=/grpc/
+RUN apk add --no-cache git
 
 WORKDIR /build/
 
 RUN git clone --recurse-submodules \
         -b v1.58.0 --depth 1 --shallow-submodules https://github.com/grpc/grpc
+
+RUN apk add --no-cache cmake build-base autoconf libtool pkgconfig git linux-headers
+
+ARG MY_INSTALL_DIR=/grpc/
 
 WORKDIR /build/grpc
 
@@ -21,10 +22,9 @@ RUN cmake -DgRPC_INSTALL=ON \
 RUN make -j 4
 RUN make install
 
-FROM ubuntu:23.04 as builder
+FROM alpine:3.18 as builder
 
-RUN apt-get update \
-    && apt-get install -y cmake build-essential autoconf libtool pkg-config git
+RUN apk add --no-cache cmake build-base autoconf libtool pkgconfig git linux-headers
 
 COPY --from=deps /grpc/ /grpc/
 
@@ -37,7 +37,7 @@ RUN mkdir build \
     && cmake .. -DCMAKE_PREFIX_PATH=/grpc/ \
     && make
 
-FROM ubuntu:23.04 AS runner
+FROM scratch AS runner
 
 COPY --from=builder /build/build/greeter_server /greeter_server
 

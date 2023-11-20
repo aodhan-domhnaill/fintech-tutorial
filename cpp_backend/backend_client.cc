@@ -25,46 +25,42 @@
 
 #include <grpcpp/grpcpp.h>
 
-#ifdef BAZEL_BUILD
-#include "examples/protos/helloworld.grpc.pb.h"
-#else
-#include "helloworld.grpc.pb.h"
-#endif
+#include "backend.grpc.pb.h"
 
-ABSL_FLAG(std::string, target, "cpp_backend:50051", "Server address");
+ABSL_FLAG(std::string, target, "backend:50051", "Server address");
 
 using grpc::Channel;
 using grpc::ClientContext;
 using grpc::Status;
-using helloworld::Greeter;
-using helloworld::HelloReply;
-using helloworld::HelloRequest;
+using ::Pricing;
+using ::Stock;
+using ::AvgPrice;
 
-class GreeterClient {
+class PricingClient {
  public:
-  GreeterClient(std::shared_ptr<Channel> channel)
-      : stub_(Greeter::NewStub(channel)) {}
+  PricingClient(std::shared_ptr<Channel> channel)
+      : stub_(Pricing::NewStub(channel)) {}
 
   // Assembles the client's payload, sends it and presents the response back
   // from the server.
-  std::string SayHello(const std::string& user) {
+  std::string SavePrice(const std::string& user) {
     // Data we are sending to the server.
-    HelloRequest request;
-    request.set_name(user);
+    Stock request;
+    request.set_symbol("CPP");
 
     // Container for the data we expect from the server.
-    HelloReply reply;
+    Stock reply;
 
     // Context for the client. It could be used to convey extra information to
     // the server and/or tweak certain RPC behaviors.
     ClientContext context;
 
     // The actual RPC.
-    Status status = stub_->SayHello(&context, request, &reply);
+    Status status = stub_->SavePrice(&context, request, &reply);
 
     // Act upon its status.
     if (status.ok()) {
-      return reply.message();
+      return reply.symbol();
     } else {
       std::cout << status.error_code() << ": " << status.error_message()
                 << std::endl;
@@ -73,7 +69,7 @@ class GreeterClient {
   }
 
  private:
-  std::unique_ptr<Greeter::Stub> stub_;
+  std::unique_ptr<Pricing::Stub> stub_;
 };
 
 int main(int argc, char** argv) {
@@ -84,11 +80,11 @@ int main(int argc, char** argv) {
   std::string target_str = absl::GetFlag(FLAGS_target);
   // We indicate that the channel isn't authenticated (use of
   // InsecureChannelCredentials()).
-  GreeterClient greeter(
+  PricingClient Pricing(
       grpc::CreateChannel(target_str, grpc::InsecureChannelCredentials()));
   std::string user("world");
-  std::string reply = greeter.SayHello(user);
-  std::cout << "Greeter received: " << reply << std::endl;
+  std::string reply = Pricing.SavePrice(user);
+  std::cout << "Pricing received: " << reply << std::endl;
 
   return 0;
 }

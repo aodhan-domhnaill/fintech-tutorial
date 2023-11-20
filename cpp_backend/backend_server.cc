@@ -28,35 +28,67 @@
 #include <grpcpp/grpcpp.h>
 #include <grpcpp/health_check_service_interface.h>
 
-#ifdef BAZEL_BUILD
-#include "examples/protos/helloworld.grpc.pb.h"
-#else
-#include "helloworld.grpc.pb.h"
-#endif
+#include "backend.grpc.pb.h"
 
 using grpc::Server;
 using grpc::ServerBuilder;
 using grpc::ServerContext;
 using grpc::Status;
-using helloworld::Greeter;
-using helloworld::HelloReply;
-using helloworld::HelloRequest;
+using ::Pricing;
+using ::Stock;
+using ::AvgPrice;
+using google::protobuf::Empty;
 
 ABSL_FLAG(uint16_t, port, 50051, "Server port for the service");
 
 // Logic and data behind the server's behavior.
-class GreeterServiceImpl final : public Greeter::Service {
-  Status SayHello(ServerContext* context, const HelloRequest* request,
-                  HelloReply* reply) override {
-    std::string prefix("Hello ");
-    reply->set_message(prefix + request->name());
+class PricingServiceImpl final : public Pricing::Service {
+  Status SavePrice(ServerContext* context, const Stock* request,
+                   Stock* response) override {
+    response->set_symbol(request->symbol());
+    return Status::OK;
+  }
+  Status GetLatestPrice(ServerContext* context, const Empty* request,
+                        Stock* response) override {
+    return Status::OK;
+  }
+  Status GetMvgAvg(ServerContext* context, const Empty* request,
+                   AvgPrice* response) override {
     return Status::OK;
   }
 };
 
+/*
+Pricing::Service::~Service() {
+}
+
+::grpc::Status Pricing::Service::SavePrice(::grpc::ServerContext* context, const ::::Stock* request, ::::Stock* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+::grpc::Status Pricing::Service::GetLatestPrice(::grpc::ServerContext* context, const ::google::protobuf::Empty* request, ::::Stock* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+::grpc::Status Pricing::Service::GetMvgAvg(::grpc::ServerContext* context, const ::google::protobuf::Empty* request, ::::AvgPrice* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+
+*/
+
 void RunServer(uint16_t port) {
   std::string server_address = absl::StrFormat("0.0.0.0:%d", port);
-  GreeterServiceImpl service;
+  PricingServiceImpl service;
 
   grpc::EnableDefaultHealthCheckService(true);
   grpc::reflection::InitProtoReflectionServerBuilderPlugin();

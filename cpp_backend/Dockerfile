@@ -39,12 +39,12 @@ RUN mkdir build \
 
 FROM scratch AS server
 
-COPY --from=builder /build/build/greeter_server /greeter_server
+COPY --from=builder /build/build/backend_server /backend_server
 
-ENTRYPOINT [ "/greeter_server" ]
+ENTRYPOINT [ "/backend_server" ]
 
 FROM scratch AS client
 
-COPY --from=builder /build/build/greeter_client /greeter_client
+COPY --from=builder /build/build/backend_client /backend_client
 
-ENTRYPOINT [ "/greeter_client" ]
+ENTRYPOINT [ "/backend_client" ]

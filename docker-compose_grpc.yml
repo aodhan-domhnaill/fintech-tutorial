@@ -46,7 +46,15 @@ services:
     entrypoint: [ "python", "/code/service.py" ]
 
   cpp_backend:
-    build: ./cpp_backend/
+    build:
+      context: ./cpp_backend/
+      target: server
+
+  cpp_backend_client:
+    build:
+      context: ./cpp_backend/
+      target: client
+
 
   test_backend:
     build: ./backend/

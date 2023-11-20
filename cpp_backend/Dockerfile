@@ -37,8 +37,14 @@ RUN mkdir build \
     && cmake .. -DCMAKE_PREFIX_PATH=/grpc/ \
     && make
 
-FROM scratch AS runner
+FROM scratch AS server
 
 COPY --from=builder /build/build/greeter_server /greeter_server
 
 ENTRYPOINT [ "/greeter_server" ]
+
+FROM scratch AS client
+
+COPY --from=builder /build/build/greeter_client /greeter_client
+
+ENTRYPOINT [ "/greeter_client" ]

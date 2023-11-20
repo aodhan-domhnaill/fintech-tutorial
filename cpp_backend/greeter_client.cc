@@ -31,7 +31,7 @@
 #include "helloworld.grpc.pb.h"
 #endif
 
-ABSL_FLAG(std::string, target, "localhost:50051", "Server address");
+ABSL_FLAG(std::string, target, "cpp_backend:50051", "Server address");
 
 using grpc::Channel;
 using grpc::ClientContext;

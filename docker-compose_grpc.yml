@@ -55,9 +55,15 @@ services:
       context: ./cpp_backend/
       target: client
 
+  cpp_compute:
+    build:
+      context: ./cpp_compute/
+      target: client
 
   test_backend:
-    build: ./backend/
+    build:
+      context: ./backend/
+      target: tester
     depends_on:
       db:
         condition: service_healthy
@@ -101,7 +107,9 @@ services:
     entrypoint: [ "uvicorn", "--host", "api", "service:app", "--reload" ]
 
   test_api:
-    build: ./api/
+    build:
+      context: ./api/
+      target: tester
     depends_on:
       db:
         condition: service_healthy

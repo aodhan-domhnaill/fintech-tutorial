@@ -45,13 +45,16 @@ add_custom_command(
 # Include generated *.pb.h files
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 
+find_package(PostgreSQL REQUIRED)
+
 # grpc_proto
 add_library(grpc_proto
   ${grpc_srcs}
   ${grpc_hdrs}
   ${proto_srcs}
   ${proto_hdrs})
-target_link_libraries(grpc_proto -static
+target_link_libraries(grpc_proto
+  PostgreSQL::PostgreSQL
   ${_REFLECTION}
   ${_GRPC_GRPCPP}
   ${_PROTOBUF_LIBPROTOBUF})

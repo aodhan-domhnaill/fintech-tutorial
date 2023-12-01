@@ -20,6 +20,8 @@
 #include <memory>
 #include <string>
 
+#include <libpq-fe.h>
+
 #include "absl/flags/flag.h"
 #include "absl/flags/parse.h"
 #include "absl/strings/str_format.h"
@@ -43,6 +45,18 @@ ABSL_FLAG(uint16_t, port, 50051, "Server port for the service");
 
 // Logic and data behind the server's behavior.
 class PricingServiceImpl final : public Pricing::Service {
+  public:
+  PricingServiceImpl() {
+    const char *conn = std::getenv("POSTGRES_URI");
+    std::cout << "Connecting to " << conn << std::endl;
+    /*PGconn *conn = PQconnectdb(std::getenv("POSTGRES_URI"));
+    if (PQstatus(conn) != CONNECTION_OK) {
+      std::cerr << "Failed connection" << std::endl;
+    }
+
+    PQfinish(conn);*/
+  }
+
   Status SavePrice(ServerContext* context, const Stock* request,
                    Stock* response) override {
     response->set_symbol(request->symbol());

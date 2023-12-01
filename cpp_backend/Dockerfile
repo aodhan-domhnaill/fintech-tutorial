@@ -24,7 +24,16 @@ RUN make install
 
 FROM alpine:3.18 as builder
 
-RUN apk add --no-cache cmake build-base autoconf libtool pkgconfig git linux-headers
+RUN apk add --no-cache \
+        cmake \
+        build-base \
+        autoconf \
+        libtool \
+        pkgconfig \
+        git \
+        linux-headers \
+        libpq \
+        libpq-dev
 
 COPY --from=deps /grpc/ /grpc/
 
@@ -37,13 +46,20 @@ RUN mkdir build \
     && cmake .. -DCMAKE_PREFIX_PATH=/grpc/ \
     && make
 
-FROM scratch AS server
+ENTRYPOINT [ "/build/build/backend_server" ]
+
+FROM alpine:3.18 as release
+
+RUN apk add --no-cache libpq
+COPY --from=deps /grpc/ /grpc/
+
+FROM release AS server
 
 COPY --from=builder /build/build/backend_server /backend_server
 
 ENTRYPOINT [ "/backend_server" ]
 
-FROM scratch AS client
+FROM release AS client
 
 COPY --from=builder /build/build/backend_client /backend_client
 

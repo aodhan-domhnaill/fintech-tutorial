@@ -48,7 +48,15 @@ services:
   backend:
     build:
       context: ./cpp_backend/
-      target: server
+      target: builder
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - default
+    environment:
+      POSTGRES_URI: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?sslmode=disable
 
   cpp_backend_client:
     build:

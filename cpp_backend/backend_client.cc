@@ -35,6 +35,7 @@ using grpc::Status;
 using ::Pricing;
 using ::Stock;
 using ::AvgPrice;
+using google::protobuf::Empty;
 
 class PricingClient {
  public:
@@ -43,7 +44,7 @@ class PricingClient {
 
   // Assembles the client's payload, sends it and presents the response back
   // from the server.
-  std::string SavePrice(const std::string& user) {
+  bool SavePrice() {
     // Data we are sending to the server.
     Stock request;
     request.set_symbol("CPP");
@@ -60,11 +61,35 @@ class PricingClient {
 
     // Act upon its status.
     if (status.ok()) {
-      return reply.symbol();
+      return (reply.symbol() == "CPP");
     } else {
       std::cout << status.error_code() << ": " << status.error_message()
                 << std::endl;
-      return "RPC failed";
+      return false;
+    }
+  }
+
+   bool GetLatestPrice() {
+    // Data we are sending to the server.
+    Empty request;
+
+    // Container for the data we expect from the server.
+    Stock reply;
+
+    // Context for the client. It could be used to convey extra information to
+    // the server and/or tweak certain RPC behaviors.
+    ClientContext context;
+
+    // The actual RPC.
+    Status status = stub_->GetLatestPrice(&context, request, &reply);
+
+    // Act upon its status.
+    if (status.ok()) {
+      return (reply.symbol() == "APPL");
+    } else {
+      std::cout << status.error_code() << ": " << status.error_message()
+                << std::endl;
+      return false;
     }
   }
 
@@ -78,13 +103,18 @@ int main(int argc, char** argv) {
   // are created. This channel models a connection to an endpoint specified by
   // the argument "--target=" which is the only expected argument.
   std::string target_str = absl::GetFlag(FLAGS_target);
+  std::cout << target_str << std::endl;
   // We indicate that the channel isn't authenticated (use of
   // InsecureChannelCredentials()).
   PricingClient Pricing(
       grpc::CreateChannel(target_str, grpc::InsecureChannelCredentials()));
-  std::string user("world");
-  std::string reply = Pricing.SavePrice(user);
-  std::cout << "Pricing received: " << reply << std::endl;
-
+  std::cout << "Printing message" << std::endl;
+  if (!Pricing.SavePrice()) {
+    exit(1);
+  }
+  std::cout << "Pricing received: " << std::endl;
+  if (!Pricing.GetLatestPrice()) {
+    exit(1);
+  }
   return 0;
 }

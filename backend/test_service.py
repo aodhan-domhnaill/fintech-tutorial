@@ -2,7 +2,6 @@ import pytest
 import os
 import grpc
 import datetime
-import unittest
 
 import backend_pb2
 import backend_pb2_grpc
@@ -23,6 +22,19 @@ def backend_stub():
         curmock = pgmock.cursor.return_value.__enter__.return_value
         curmock.fetchone.return_value = (
             datetime.datetime.now(), 200.2, "AAPL")
+        service.run(dbconn=pgmock)
+    return backend_pb2_grpc.PricingStub(
+        grpc.insecure_channel(f'{host}:50051')
+    )
+
+
+@pytest.fixture
+def mvgavg_stub():
+    host = os.getenv("BACKEND_GRPC_HOST") or "localhost"
+    if host == "localhost":
+        pgmock = MagicMock()
+        curmock = pgmock.cursor.return_value.__enter__.return_value
+        curmock.fetchone.return_value = (200.2, )
         service.run(dbconn=pgmock)
     return backend_pb2_grpc.PricingStub(
         grpc.insecure_channel(f'{host}:50051')
@@ -50,7 +62,6 @@ def test_GetLatestPrice(backend_stub):
     assert price.symbol == "AAPL"
 
 
-@unittest.skip("reason for skipping")
-def test_GetMvgPrice(backend_stub):
-    price = backend_stub.GetMvgAvg(Empty())
-    assert price.price == 123
+def test_GetMvgPrice(mvgavg_stub):
+    price = mvgavg_stub.GetMvgAvg(Empty())
+    assert price.price > 123

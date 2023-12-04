@@ -45,38 +45,7 @@ services:
       POSTGRES_URI: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?sslmode=disable
     entrypoint: [ "python", "/code/service.py" ]
 
-  cpp_backend:
-    build:
-      context: ./cpp_backend/
-      target: builder
-    restart: always
-    depends_on:
-      db:
-        condition: service_healthy
-    networks:
-      - default
-    environment:
-      POSTGRES_URI: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?sslmode=disable
-
   test_backend:
-    build:
-      context: ./cpp_backend/
-      target: builder
-    restart: on-failure
-    depends_on:
-      db:
-        condition: service_healthy
-    networks:
-      - default
-    entrypoint: [ "/build/build/backend_client" ]
-
-
-  cpp_compute:
-    build:
-      context: ./cpp_compute/
-      target: client
-
-  py_test_backend:
     build:
       context: ./backend/
       target: tester

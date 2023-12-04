@@ -1,0 +1,21 @@
+version: "3.7"
+
+services:
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+  cache:
+    build: ./cache/
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    networks:
+      - default
+    ports:
+      - 8000:8000
+    entrypoint: [ "uvicorn", "--host", "cache", "app:app", "--reload" ]

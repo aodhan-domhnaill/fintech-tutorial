@@ -62,6 +62,7 @@ class Pricing(backend_pb2_grpc.PricingServicer):
 
         return syms
 
+
 def run(dbconn):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     backend_pb2_grpc.add_PricingServicer_to_server(Pricing(dbconn), server)

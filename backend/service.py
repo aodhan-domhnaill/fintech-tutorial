@@ -50,6 +50,17 @@ class Pricing(backend_pb2_grpc.PricingServicer):
             price=p[0],
         )
 
+    def GetSymbols(self, request, context):
+        with self.conn.cursor() as curs:
+            curs.execute("SELECT * from symbols")
+            p = curs.fetchall()
+            print(p)
+
+        syms = backend_pb2.Sym()
+        for sym in p:
+            syms.sym.append(sym[0])
+
+        return syms
 
 def run(dbconn):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

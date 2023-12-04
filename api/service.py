@@ -48,3 +48,18 @@ def get_mvg_avg():
 def _get_mvg_avg(backend_stub):
     price = backend_stub.GetMvgAvg(Empty()).price
     return {"price": price}
+
+
+@app.get("/get_sym/")
+def get_sym():
+    return _get_sym(backend_stub=backend_stub())
+
+
+def _get_sym(backend_stub):
+    syms = backend_stub.GetSymbols(Empty())
+
+    result = []
+    for sym in syms.sym:
+        result.append(sym)
+
+    return result

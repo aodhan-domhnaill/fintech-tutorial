@@ -30,6 +30,11 @@ class PricingStub(object):
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
                 response_deserializer=backend__pb2.AvgPrice.FromString,
                 )
+        self.GetSymbols = channel.unary_unary(
+                '/Pricing/GetSymbols',
+                request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+                response_deserializer=backend__pb2.Sym.FromString,
+                )
 
 
 class PricingServicer(object):
@@ -53,6 +58,12 @@ class PricingServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetSymbols(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_PricingServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -70,6 +81,11 @@ def add_PricingServicer_to_server(servicer, server):
                     servicer.GetMvgAvg,
                     request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                     response_serializer=backend__pb2.AvgPrice.SerializeToString,
+            ),
+            'GetSymbols': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetSymbols,
+                    request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                    response_serializer=backend__pb2.Sym.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -129,5 +145,22 @@ class Pricing(object):
         return grpc.experimental.unary_unary(request, target, '/Pricing/GetMvgAvg',
             google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             backend__pb2.AvgPrice.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetSymbols(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/Pricing/GetSymbols',
+            google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            backend__pb2.Sym.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

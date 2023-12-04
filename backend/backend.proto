@@ -14,10 +14,15 @@ message AvgPrice {
     float price = 1;
 }
 
+message Sym {
+    repeated string sym = 1;
+}
+
 service Pricing {
     rpc SavePrice(Stock) returns (Stock);
     rpc GetLatestPrice(google.protobuf.Empty) returns (Stock);
     rpc GetMvgAvg(google.protobuf.Empty) returns (AvgPrice);
+    rpc GetSymbols(google.protobuf.Empty) returns (Sym);
 }
 
 

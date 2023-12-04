@@ -15,7 +15,7 @@ from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rbackend.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\"U\n\x05Stock\x12\x0e\n\x06symbol\x18\x01 \x01(\t\x12\r\n\x05price\x18\x02 \x01(\x02\x12-\n\ttimestamp\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"\x19\n\x08\x41vgPrice\x12\r\n\x05price\x18\x01 \x01(\x02\x32\x88\x01\n\x07Pricing\x12\x1b\n\tSavePrice\x12\x06.Stock\x1a\x06.Stock\x12\x30\n\x0eGetLatestPrice\x12\x16.google.protobuf.Empty\x1a\x06.Stock\x12.\n\tGetMvgAvg\x12\x16.google.protobuf.Empty\x1a\t.AvgPriceb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rbackend.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\"U\n\x05Stock\x12\x0e\n\x06symbol\x18\x01 \x01(\t\x12\r\n\x05price\x18\x02 \x01(\x02\x12-\n\ttimestamp\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"\x19\n\x08\x41vgPrice\x12\r\n\x05price\x18\x01 \x01(\x02\"\x12\n\x03Sym\x12\x0b\n\x03sym\x18\x01 \x03(\t2\xb4\x01\n\x07Pricing\x12\x1b\n\tSavePrice\x12\x06.Stock\x1a\x06.Stock\x12\x30\n\x0eGetLatestPrice\x12\x16.google.protobuf.Empty\x1a\x06.Stock\x12.\n\tGetMvgAvg\x12\x16.google.protobuf.Empty\x1a\t.AvgPrice\x12*\n\nGetSymbols\x12\x16.google.protobuf.Empty\x1a\x04.Symb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -26,6 +26,8 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _globals['_STOCK']._serialized_end=164
   _globals['_AVGPRICE']._serialized_start=166
   _globals['_AVGPRICE']._serialized_end=191
-  _globals['_PRICING']._serialized_start=194
-  _globals['_PRICING']._serialized_end=330
+  _globals['_SYM']._serialized_start=193
+  _globals['_SYM']._serialized_end=211
+  _globals['_PRICING']._serialized_start=214
+  _globals['_PRICING']._serialized_end=394
 # @@protoc_insertion_point(module_scope)

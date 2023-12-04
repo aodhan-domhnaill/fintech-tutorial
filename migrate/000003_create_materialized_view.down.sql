@@ -1,0 +1,5 @@
+
+DROP view symbols
+
+
+

@@ -36,10 +36,10 @@ jobs:
       - uses: isbang/compose-action@v1.5.1
         with:
           compose-file: "./docker-compose.yml"
+          up-flags: --exit-code test_backend
           services: |
             backend
             test_backend
-            migrate
     services:
       # Label used to access the service container
       postgres:
@@ -55,6 +55,7 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+    
 
 
   

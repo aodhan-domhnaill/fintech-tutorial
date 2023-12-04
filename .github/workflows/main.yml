@@ -25,7 +25,11 @@ jobs:
   
   test_backend:
     runs-on: ubuntu-latest
+    # container: docker/compose
     steps:
+      -
+        name: Check out repository code
+        uses: actions/checkout@v4
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -51,5 +55,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+
 
   
